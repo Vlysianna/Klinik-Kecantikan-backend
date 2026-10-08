@@ -1,58 +1,173 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💄 Klinik Kecantikan — Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+REST API backend untuk sistem manajemen **Klinik Kecantikan** berbasis **Laravel**. Menyediakan autentikasi, manajemen produk, transaksi POS, dan laporan penjualan harian.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🧰 Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Teknologi | Keterangan |
+|---|---|
+| PHP | >= 8.2 |
+| Laravel | ^12.x |
+| Laravel Sanctum | Autentikasi token API |
+| MySQL | Database utama |
+| Composer | Package manager PHP |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📁 Struktur Proyek
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+app/
+├── Http/
+│   └── Controllers/
+│       ├── AuthController.php
+│       ├── ProductController.php
+│       └── TransactionController.php
+├── Models/             # Eloquent models
+database/
+├── migrations/         # Skema tabel database
+│   ├── create_users_table.php
+│   ├── create_products_table.php
+│   ├── create_transactions_table.php
+│   └── create_transaction_details_table.php
+└── seeders/            # Data awal (seeder)
+routes/
+└── api.php             # Definisi endpoint API
+config/
+└── cors.php            # Konfigurasi CORS
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## ⚙️ Prerequisites
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Pastikan sudah terinstall:
+- **PHP** >= 8.2
+- **Composer** >= 2.x
+- **MySQL** (atau Laragon / XAMPP)
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 Setup & Instalasi
 
-## Security Vulnerabilities
+### 1. Clone Repository
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+git clone <url-repository>
+cd Klinik-Kecantikan-backend
+```
 
-## License
+### 2. Install Dependencies
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+composer install
+```
+
+### 3. Konfigurasi Environment
+
+Salin file `.env.example` menjadi `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Sesuaikan konfigurasi database di `.env`:
+
+```env
+APP_NAME=Laravel
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=klinik-kecantikan-be
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+### 5. Buat Database
+
+Buat database baru di MySQL dengan nama `klinik-kecantikan-be`, lalu jalankan migrasi:
+
+```bash
+php artisan migrate
+```
+
+### 6. (Opsional) Jalankan Seeder
+
+```bash
+php artisan db:seed
+```
+
+### 7. Jalankan Development Server
+
+```bash
+php artisan serve
+```
+
+API akan berjalan di: **http://localhost:8000**
+
+---
+
+## 🔌 API Endpoints
+
+Semua endpoint (kecuali login) membutuhkan header:
+```
+Authorization: Bearer <token>
+```
+
+### Auth
+
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| POST | `/api/login` | Login & dapatkan token |
+| POST | `/api/logout` | Logout (hapus token) |
+| GET | `/api/user` | Data user yang login |
+
+### Produk
+
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/products` | Daftar semua produk |
+| POST | `/api/products` | Tambah produk baru |
+| GET | `/api/products/{id}` | Detail produk |
+| PUT | `/api/products/{id}` | Update produk |
+| DELETE | `/api/products/{id}` | Hapus produk |
+
+### Transaksi
+
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/transactions` | Daftar transaksi |
+| POST | `/api/transactions` | Buat transaksi baru |
+| GET | `/api/transactions/{id}` | Detail transaksi |
+
+### Laporan
+
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/reports/daily` | Laporan penjualan harian |
+
+---
+
+## 🗄️ Struktur Database
+
+| Tabel | Keterangan |
+|---|---|
+| `users` | Data admin/kasir |
+| `products` | Produk & layanan klinik |
+| `transactions` | Header transaksi POS |
+| `transaction_details` | Detail item per transaksi |
+| `personal_access_tokens` | Token Sanctum |
+
+---
+
+
